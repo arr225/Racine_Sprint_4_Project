@@ -39,18 +39,21 @@ fig1.update_layout(title= "<b> Attribute of price by {}</b>".format(selected_att
 st.plotly_chart(fig1)
 
 
-def categorize_age_group(year):
+def categorize_age_group(year, show_age_group):
+    if not show_age_group:
+        return ''
     if year <= 1969: return 'Old'
     elif 1970 <= year <= 1999: return 'Middle'
     else: return 'New'
 
+# Add a checkbox to toggle the age group function
+show_age_group = st.checkbox('Show Age Group', value=True)
 
-df['age_group'] = df['model_year'].apply(categorize_age_group)
+df_vehicles['age_group'] = df_vehicles['model_year'].apply(lambda x: categorize_age_group(x, show_age_group))
 
 scatter_list = ['condition', 'odometer', 'days_listed']
-
 selected_scatter = st.selectbox('Price dependency on', scatter_list)
 
-fig2 = px.scatter(df_vehicles, x='price', y=selected_scatter, color ='age_group',hover_data=['model_year'])
+fig2 = px.scatter(df_vehicles, x='price', y=selected_scatter, color ='age_group', hover_data=['model_year'])
 
 st.plotly_chart(fig2)
