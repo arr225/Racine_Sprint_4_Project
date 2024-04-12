@@ -21,7 +21,5 @@ actual_range = list(range(year_range[0], year_range[1]+1))
 df_filtered = df_vehicles[(df_vehicles.type == selected_menu) & df_vehicles.isin(list(actual_range))]
                           
 
-
-
 st.write(df_vehicles.head())
  
