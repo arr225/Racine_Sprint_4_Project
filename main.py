@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 import streamlit as st
-import plotly.express as px
 
 
 st.header('Vehicles for Sale')
@@ -34,6 +33,7 @@ selected_attribute = st.selectbox('Attribute for Price Distribution', list_hist)
 
 fig1 = px.histogram(df_vehicles, x='price', color = selected_attribute)
 fig1.update_layout(title= "<b> Attribute of price by {}</b>".format(selected_attribute))
+
 st.plotly_chart(fig1)
 
 
