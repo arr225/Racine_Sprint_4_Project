@@ -16,6 +16,13 @@ min_year, max_year = int(df_vehicles['model_year'].min()), int(df_vehicles['mode
                          
 year_range = st.slider('Select Year', value=(min_year, max_year), min_value=min_year,max_value=max_year)
 
+actual_range = list(range(year_range[0], year_range[1]+1))
+
+df_filtered = df_vehicles[(df_vehicles.type == selected_menu) & df_vehicles.isin(list(actual_range))]
+                          
+df_filtered
+
+
 
 st.write(df_vehicles.head())
  
