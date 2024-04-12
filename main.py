@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import streamlit as st
 import plotly.express as px
-
+import numpy as np
 
 
 st.header('Vehicles for Sale')
@@ -29,7 +29,7 @@ st.header('Price Analysis')
 st.write("""
 ###### View pricing based on selectable vehicle attributes.""")
 
-list_hist = ['odometer', 'type', 'fuel', 'transmission']
+list_hist = ['type', 'fuel', 'transmission', 'paint_color']
 
 selected_attribute = st.selectbox('Attribute for Price Distribution', list_hist)
 
@@ -39,4 +39,18 @@ fig1.update_layout(title= "<b> Attribute of price by {}</b>".format(selected_att
 st.plotly_chart(fig1)
 
 
+def categorize_age_group(year):
+    if year <= 1969: return 'Old'
+    elif 1970 <= year <= 1999: return 'Middle'
+    else: return 'New'
 
+
+df['age_group'] = df['model_year'].apply(categorize_age_group)
+
+scatter_list = ['condition', 'odometer', 'days_listed']
+
+selected_scatter = st.selectbox('Price dependency on', scatter_list)
+
+fig2 = px.scatter(df_vehicles, x='price', y=selected_scatter, color ='age_group',hover_data=['model_year'])
+
+st.plotly_chart(fig2)
