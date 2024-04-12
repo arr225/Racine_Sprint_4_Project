@@ -1,3 +1,4 @@
 {
-    "editor.defaultFoldingRangeProvider": "ms-python.debugpy"
+    "editor.defaultFoldingRangeProvider": "ms-python.debugpy",
+    "python.REPL.enableREPLSmartSend": false
 }
