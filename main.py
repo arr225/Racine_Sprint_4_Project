@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 
 df_vehicles = pd.read_csv('./vehicles_us.csv')
+df_vehicles = df_vehicles.drop(df_vehicles.columns[0], axis=1)
 
 st.header('Vehicles for Sale')
 st.write('Filter the data below to see the available vehicles by maker')
