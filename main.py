@@ -41,15 +41,6 @@ fig1.update_layout(title= "<b> Attribute of price by {}</b>".format(selected_att
 st.plotly_chart(fig1)
 
 
-def remove_outliers(df, column):
-    # Calculate Z-score for the column
-    z_scores = stats.zscore(df[column])
-    # Define threshold for outliers (e.g., Z-score > 3 or Z-score < -3)
-    threshold = 3
-    # Filter rows where absolute Z-score exceeds the threshold
-    df_filtered = df[(z_scores < threshold) & (z_scores > -threshold)]
-    return df_filtered
-
 def categorize_age_group(year, show_age_group):
     if not show_age_group:
         return ''
@@ -60,20 +51,11 @@ def categorize_age_group(year, show_age_group):
 # Add a checkbox to toggle the age group function
 show_age_group = st.checkbox('Show Age Group', value=True)
 
-# Load your DataFrame (replace this line with your DataFrame loading code)
-# df_vehicles = pd.read_csv('your_dataset.csv')
-
-# Remove outliers from 'price' column
-df_vehicles_cleaned = remove_outliers(df_vehicles, 'price')
-# Remove outliers from 'model_year' column
-df_vehicles_cleaned = remove_outliers(df_vehicles_cleaned, 'model_year')
-
-df_vehicles_cleaned['age_group'] = df_vehicles_cleaned['model_year'].apply(lambda x: categorize_age_group(x, show_age_group))
+df_vehicles['age_group'] = df_vehicles['model_year'].apply(lambda x: categorize_age_group(x, show_age_group))
 
 scatter_list = ['condition', 'odometer', 'days_listed']
 selected_scatter = st.selectbox('Price dependency on', scatter_list)
 
-fig2 = px.scatter(df_vehicles_cleaned, x='price', y=selected_scatter, color ='age_group', hover_data=['model_year'])
+fig2 = px.scatter(df_vehicles, x='price', y=selected_scatter, color ='age_group', hover_data=['model_year'])
 
 st.plotly_chart(fig2)
-
