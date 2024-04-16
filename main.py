@@ -72,8 +72,8 @@ st.plotly_chart(fig1)
 def categorize_age_group(year, show_age_group):
     if not show_age_group:
         return ''
-    if year <= 1969: return 'Old'
-    elif 1970 <= year <= 1999: return 'Middle'
+    if year <= 2000: return 'Old'
+    elif 2001 <= year <= 2015: return 'Middle'
     else: return 'New'
 
 # Add a checkbox to toggle the age group function
