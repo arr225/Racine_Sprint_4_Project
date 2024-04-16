@@ -11,6 +11,31 @@ st.header('Vehicles for Sale')
 st.write('Filter the data below to see the available vehicles by vehicle model.')
 
 df_vehicles = pd.read_csv('./vehicles_us.csv')
+# Calculate median model year for each model
+median_model_year = df_vehicles.groupby('model')['model_year'].transform('median')
+
+# Fill missing values in 'model_year' with the corresponding median model year
+df_vehicles['model_year'] = df_vehicles['model_year'].fillna(median_model_year)
+
+# Convert 'model_year' to integer type
+df_vehicles['model_year'] = df_vehicles['model_year'].astype(int)
+
+# Reset the index
+df_vehicles.reset_index(drop=True, inplace=True)
+
+# Remove outliers within the 'model_year' & 'price column
+def remove_outliers(df, columns):
+    for column in columns:
+        # Calculate Z-score for the column
+        z_scores = stats.zscore(df[column])
+        # Define threshold for outliers (e.g., Z-score > 3 or Z-score < -3)
+        threshold = 3
+        # Filter rows where absolute Z-score exceeds the threshold
+        df = df[(z_scores < threshold) & (z_scores > -threshold)]
+    return df
+
+# Remove outliters 
+df_vehicles = remove_outliers(df_vehicles, ['price', 'model_year'])
 
 vehicle_type_choice = df_vehicles['model'].unique()
 
@@ -25,6 +50,9 @@ actual_range = list(range(year_range[0], year_range[1]+1))
 df_filtered = df_vehicles[(df_vehicles.model == selected_menu) & (df_vehicles.model_year.isin(list(actual_range)))]
 
 st.write(df_filtered)
+
+
+
 
 st.header('Price Analysis')
 
