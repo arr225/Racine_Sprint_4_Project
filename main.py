@@ -11,6 +11,8 @@ st.header('Vehicles for Sale')
 st.write('Filter the data below to see the available vehicles by vehicle model.')
 
 df_vehicles = pd.read_csv('./vehicles_us.csv')
+df_vehicles['manufacturer'] = df_vehicles['model'].apply(lambda x: x.split()[0])
+
 # Calculate median model year for each model
 median_model_year = df_vehicles.groupby('model')['model_year'].transform('median')
 
@@ -37,6 +39,36 @@ def remove_outliers(df, columns):
 # Remove outliters 
 df_vehicles = remove_outliers(df_vehicles, ['price', 'model_year'])
 
+# Calculate median cylinders for each model
+median_cylinders = df_vehicles.groupby('model')['cylinders'].transform('median')
+
+# Fill missing values in 'cylinders' with the corresponding median cylinders
+df_vehicles['cylinders'] = df_vehicles['cylinders'].fillna(median_cylinders)
+
+# Convert 'cylinders' to integer type
+df_vehicles['cylinders'] = df_vehicles['cylinders'].astype(int)
+
+# Reset the index
+df_vehicles.reset_index(drop=True, inplace=True)
+
+# Calculate median odometer value for each group
+median_odometer = df_vehicles.groupby(['model_year', 'model'])['odometer'].transform('median')
+
+# Fill missing values in 'odometer' with the corresponding median value
+df_vehicles['odometer'] = df_vehicles['odometer'].fillna(median_odometer)
+
+# Fill remaining missing values with a placeholder value (e.g., -1)
+df_vehicles.fillna({'odometer': -1}, inplace=True)
+
+# Change 'odometer' data type to int
+df_vehicles['odometer'] = df_vehicles['odometer'].astype(int)
+
+# Reset the index
+df_vehicles.reset_index(drop=True, inplace=True)
+
+
+# First dropdown selector with chart
+
 vehicle_type_choice = df_vehicles['model'].unique()
 
 selected_menu = st.selectbox('Select Vehicle Type', vehicle_type_choice)
@@ -52,7 +84,7 @@ df_filtered = df_vehicles[(df_vehicles.model == selected_menu) & (df_vehicles.mo
 st.write(df_filtered)
 
 
-
+# Second graph with histogram
 
 st.header('Price Analysis')
 
@@ -68,6 +100,8 @@ fig1.update_layout(title= "<b> Attribute of price by {}</b>".format(selected_att
 
 st.plotly_chart(fig1)
 
+
+# Third graph with Scatter Plot
 
 def categorize_age_group(year, show_age_group):
     if not show_age_group:
